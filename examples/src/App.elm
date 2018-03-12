@@ -1,9 +1,10 @@
 module App exposing (..)
 
+import Bootstrap.Button as Button
+import Bootstrap.Grid as Grid
 import Char
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 import Keyboard
 import Toasty
 import Toasty.Defaults
@@ -48,9 +49,13 @@ update msg model =
     case msg of
         KeyPressed keycode ->
             case Char.fromCode keycode of
+                'i' ->
+                    (model ! [])
+                        |> addToast (Toasty.Defaults.Info "Info" "This is information.")
+
                 's' ->
                     (model ! [])
-                        |> addToast (Toasty.Defaults.Success "Allright!" "Thing successfully updated")
+                        |> addToast (Toasty.Defaults.Success "Success" "Thing successfully updated.")
 
                 'w' ->
                     (model ! [])
@@ -63,9 +68,13 @@ update msg model =
                 _ ->
                     model ! []
 
+        BtnClicked "info" ->
+            (model ! [])
+                |> addToast (Toasty.Defaults.Info "Info" "This is information.")
+
         BtnClicked "success" ->
             (model ! [])
-                |> addToast (Toasty.Defaults.Success "Allright!" "Thing successfully updated")
+                |> addToast (Toasty.Defaults.Success "Success" "Thing successfully updated")
 
         BtnClicked "warning" ->
             (model ! [])
@@ -88,19 +97,23 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ h1 [] [ text "Toasty demo" ]
+    Grid.containerFluid []
+        [ h1 [] [ text "Toasty Bootstrap" ]
         , p []
             [ text "Click for adding a "
-            , button [ class "btn success", type_ "button", onClick <| BtnClicked "success" ] [ text "success" ]
+            , Button.button [ Button.info, Button.onClick (BtnClicked "info") ] [ text "info" ]
             , text ", "
-            , button [ class "btn warning", type_ "button", onClick <| BtnClicked "warning" ] [ text "warning" ]
+            , Button.button [ Button.success, Button.onClick (BtnClicked "success") ] [ text "success" ]
+            , text ", "
+            , Button.button [ Button.warning, Button.onClick (BtnClicked "warning") ] [ text "warning" ]
             , text " or "
-            , button [ class "btn error", type_ "button", onClick <| BtnClicked "error" ] [ text "error" ]
+            , Button.button [ Button.danger, Button.onClick (BtnClicked "error") ] [ text "error" ]
             , text " toast."
             ]
         , p []
             [ text "Also you can press in your keyboard "
+            , kbd [] [ text "[i]" ]
+            , text " for info, "
             , kbd [] [ text "[s]" ]
             , text " for success, "
             , kbd [] [ text "[w]" ]
@@ -111,8 +124,8 @@ view model =
         , p [ class "help small" ] [ text "Click on any toast to remove it." ]
         , p [] [ text "This demo uses ", code [] [ text "Toasty.Defaults" ], text " for styling." ]
         , p []
-            [ a [ href "http://package.elm-lang.org/packages/pablen/toasty/latest" ]
-                [ text "Toasty at package.elm-lang.org" ]
+            [ a [ href "http://package.elm-lang.org/packages/andrewjackman/toasty-bootstrap/latest" ]
+                [ text "Toasty Bootstrap at package.elm-lang.org" ]
             ]
         , Toasty.view myConfig Toasty.Defaults.view ToastyMsg model.toasties
         ]

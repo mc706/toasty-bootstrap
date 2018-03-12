@@ -1,4 +1,3 @@
-require('./main.css');
 require('../../src/Toasty/Defaults.css');
 var Elm = require('./App.elm');
 

@@ -1,18 +1,18 @@
 module Toasty
     exposing
         ( Config
-        , Stack
         , Msg
-        , transitionOutDuration
-        , transitionOutAttrs
-        , transitionInAttrs
-        , containerAttrs
-        , initialState
-        , itemAttrs
+        , Stack
         , addToast
         , config
-        , update
+        , containerAttrs
         , delay
+        , initialState
+        , itemAttrs
+        , transitionInAttrs
+        , transitionOutAttrs
+        , transitionOutDuration
+        , update
         , view
         )
 
@@ -137,13 +137,13 @@ classes.
 
 -}
 
-import Html.Events exposing (..)
 import Html exposing (..)
+import Html.Events exposing (..)
 import Html.Keyed
 import Process
-import Time
-import Task
 import Random exposing (Seed)
+import Task
+import Time
 
 
 {-| Represents the stack of current toasts notifications. You can model a toast
@@ -286,31 +286,31 @@ update config tagger msg model =
         (Stack toasts seed) =
             model.toasties
     in
-        case msg of
-            Add toast ->
-                addToast config tagger toast ( model, Cmd.none )
+    case msg of
+        Add toast ->
+            addToast config tagger toast ( model, Cmd.none )
 
-            Remove targetId ->
-                let
-                    newStack =
-                        List.filter (\( id, toast, status ) -> id /= targetId) toasts
-                in
-                    { model | toasties = (Stack newStack seed) } ! []
+        Remove targetId ->
+            let
+                newStack =
+                    List.filter (\( id, toast, status ) -> id /= targetId) toasts
+            in
+            { model | toasties = Stack newStack seed } ! []
 
-            TransitionOut targetId ->
-                let
-                    newStack =
-                        List.map
-                            (\( id, status, toast ) ->
-                                if (id == targetId) then
-                                    ( id, Leaving, toast )
-                                else
-                                    ( id, status, toast )
-                            )
-                            toasts
-                in
-                    { model | toasties = Stack newStack seed }
-                        ! [ Task.perform (\_ -> tagger (Remove targetId)) (Process.sleep <| cfg.transitionOutDuration * Time.millisecond) ]
+        TransitionOut targetId ->
+            let
+                newStack =
+                    List.map
+                        (\( id, status, toast ) ->
+                            if id == targetId then
+                                ( id, Leaving, toast )
+                            else
+                                ( id, status, toast )
+                        )
+                        toasts
+            in
+            { model | toasties = Stack newStack seed }
+                ! [ Task.perform (\_ -> tagger (Remove targetId)) (Process.sleep <| cfg.transitionOutDuration * Time.millisecond) ]
 
 
 {-| Adds a toast to the stack and schedules its removal. It receives and returns
@@ -339,8 +339,8 @@ addToast config tagger toast ( model, cmd ) =
         ( newId, newSeed ) =
             getNewId seed
     in
-        { model | toasties = Stack (toasts ++ [ ( newId, Entered, toast ) ]) newSeed }
-            ! ([ cmd, Task.perform (\() -> tagger (TransitionOut newId)) (Process.sleep <| cfg.delay * Time.millisecond) ])
+    { model | toasties = Stack (toasts ++ [ ( newId, Entered, toast ) ]) newSeed }
+        ! [ cmd, Task.perform (\() -> tagger (TransitionOut newId)) (Process.sleep <| cfg.delay * Time.millisecond) ]
 
 
 {-| Renders the stack of toasts. You need to add it to your app view function and
@@ -359,10 +359,10 @@ view config toastView tagger (Stack toasts seed) =
         (Config cfg) =
             config
     in
-        if (List.isEmpty toasts) then
-            text ""
-        else
-            Html.Keyed.ol cfg.containerAttrs <| List.map (\toast -> itemContainer config tagger toast toastView) toasts
+    if List.isEmpty toasts then
+        text ""
+    else
+        Html.Keyed.ol cfg.containerAttrs <| List.map (\toast -> itemContainer config tagger toast toastView) toasts
 
 
 getNewId : Seed -> ( Id, Seed )
@@ -381,4 +381,4 @@ itemContainer (Config cfg) tagger ( id, status, toast ) toastView =
                 Leaving ->
                     cfg.transitionOutAttrs
     in
-        ( toString id, li (cfg.itemAttrs ++ attrs ++ [ onClick (tagger <| TransitionOut id) ]) [ toastView toast ] )
+    ( toString id, li (cfg.itemAttrs ++ attrs ++ [ onClick (tagger <| TransitionOut id) ]) [ toastView toast ] )

@@ -5,7 +5,7 @@ module Toasty.Defaults
         , view
         )
 
-{-| This module provides a generic toast type with three variants (success, error and warning)
+{-| This module provides a generic toast type with four variants (info, success, error and warning)
 each one supports a title and optional secondary message.
 
 **You need to load the provided `Defaults.css` file in your project**. `bounceInRight`
@@ -21,16 +21,18 @@ See a [demo](http://pablen-toasty-demo.surge.sh/).
 
 -}
 
-import Html.Attributes exposing (..)
+import Bootstrap.Alert as Alert
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Toasty
 
 
-{-| This theme defines toasts of three variants: "Success", "Warning" and "Error".
+{-| This theme defines toasts of four variants: "Info", "Success", "Warning" and "Error".
 Each of them accepts a title and an optional secondary message.
 -}
 type Toast
-    = Success String String
+    = Info String String
+    | Success String String
     | Warning String String
     | Error String String
 
@@ -94,23 +96,26 @@ transitionOutAttrs =
 view : Toast -> Html msg
 view toast =
     case toast of
+        Info title message ->
+            simpleAlert Alert.simpleInfo title message
+
         Success title message ->
-            genericToast "toasty-success" title message
+            simpleAlert Alert.simpleSuccess title message
 
         Warning title message ->
-            genericToast "toasty-warning" title message
+            simpleAlert Alert.simpleWarning title message
 
         Error title message ->
-            genericToast "toasty-error" title message
+            simpleAlert Alert.simpleDanger title message
 
 
-genericToast : String -> String -> String -> Html msg
-genericToast variantClass title message =
+simpleAlert : (List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg) -> String -> String -> Html msg
+simpleAlert config title message =
     div
-        [ class "toasty-container", class variantClass ]
-        [ h1 [ class "toasty-title" ] [ text title ]
-        , if (String.isEmpty message) then
-            text ""
-          else
-            p [ class "toasty-message" ] [ text message ]
+        [ class "toasty-container" ]
+        [ config
+            []
+            [ Alert.h5 [] [ text title ]
+            , text message
+            ]
         ]

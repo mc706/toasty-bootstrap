@@ -122,7 +122,6 @@ view model =
             , text " for error toasts."
             ]
         , p [ class "help small" ] [ text "Click on any toast to remove it." ]
-        , p [] [ text "This demo uses ", code [] [ text "Toasty.Defaults" ], text " for styling." ]
         , p []
             [ a [ href "http://package.elm-lang.org/packages/andrewjackman/toasty-bootstrap/latest" ]
                 [ text "Toasty Bootstrap at package.elm-lang.org" ]

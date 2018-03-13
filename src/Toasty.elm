@@ -22,8 +22,8 @@ a side-effect of model updates by piping your update function return value
 through this library `addToast` function.
 
 While this package lets you configure each part of the rendering and behaviour
-of the notification stack, you can use a nice default theme configuration provided
-in `Toasty.Defaults`. See a [demo using default styling](http://pablen-toasty-demo.surge.sh/).
+of the notification stack, you can use the default Bootstrap Alert theme configuration provided
+in `Toasty.Defaults`. See a [demo using default styling](http://toasty-bootstrap.surge.sh/).
 
 
 ## Example
@@ -154,11 +154,13 @@ to be as complex or simple as you want.
         }
 
 
-    -- Defines a toast model that has three different variants
+    -- Defines a toast model that has four different variants
 
     type MyToast
-        = Success String
-        | Warning String
+        =
+        | Info String String
+        | Success String String
+        | Warning String String
         | Error String String
 
 -}

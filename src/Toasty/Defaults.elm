@@ -12,7 +12,7 @@ each one supports a title and optional secondary message.
 and `fadeOutRightBig` animations borrowed from [Animate.css](https://daneden.github.io/animate.css/)
 project by Daniel Eden.
 
-See a [demo](http://pablen-toasty-demo.surge.sh/).
+See a [demo](http://toasty-bootstrap.surge.sh/).
 
 
 # Definition

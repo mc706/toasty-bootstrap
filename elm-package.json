@@ -1,7 +1,7 @@
 {
     "version": "2.0.0",
     "summary": "A configurable toast notification package for Elm, using elm-bootstrap alerts.",
-    "repository": "https://github.com/pablen/toasty.git",
+    "repository": "https://github.com/andrewjackman/toasty-bootstrap.git",
     "license": "BSD3",
     "source-directories": [
         ".",

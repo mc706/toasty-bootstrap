@@ -51,38 +51,54 @@ update msg model =
             case Char.fromCode keycode of
                 'i' ->
                     (model ! [])
-                        |> addToast (Toasty.Defaults.Info "Info" "This is information.")
+                        |> addToast (Toasty.Defaults.Info (Just "Info") "This is information.")
 
                 's' ->
                     (model ! [])
-                        |> addToast (Toasty.Defaults.Success "Success" "Thing successfully updated.")
+                        |> addToast (Toasty.Defaults.Success (Just "Success") "Thing successfully updated.")
 
                 'w' ->
                     (model ! [])
-                        |> addToast (Toasty.Defaults.Warning "Warning!" "Please check this and that.")
+                        |> addToast (Toasty.Defaults.Warning (Just "Warning!") "Please check this and that.")
 
                 'e' ->
                     (model ! [])
-                        |> addToast (Toasty.Defaults.Error "Error" "Sorry, something went wrong...")
+                        |> addToast (Toasty.Defaults.Error (Just "Error") "Sorry, something went wrong...")
 
                 _ ->
                     model ! []
 
         BtnClicked "info" ->
             (model ! [])
-                |> addToast (Toasty.Defaults.Info "Info" "This is information.")
+                |> addToast (Toasty.Defaults.Info (Just "Info") "This is information.")
 
         BtnClicked "success" ->
             (model ! [])
-                |> addToast (Toasty.Defaults.Success "Success" "Thing successfully updated")
+                |> addToast (Toasty.Defaults.Success (Just "Success") "Thing successfully updated.")
 
         BtnClicked "warning" ->
             (model ! [])
-                |> addToast (Toasty.Defaults.Warning "Warning!" "Please check this and that.")
+                |> addToast (Toasty.Defaults.Warning (Just "Warning!") "Please check this and that.")
 
         BtnClicked "error" ->
             (model ! [])
-                |> addToast (Toasty.Defaults.Error "Error" "Sorry, something went wrong...")
+                |> addToast (Toasty.Defaults.Error (Just "Error") "Sorry, something went wrong...")
+
+        BtnClicked "info-no-title" ->
+            (model ! [])
+                |> addToast (Toasty.Defaults.Info Nothing "This is information.")
+
+        BtnClicked "success-no-title" ->
+            (model ! [])
+                |> addToast (Toasty.Defaults.Success Nothing "Thing successfully updated.")
+
+        BtnClicked "warning-no-title" ->
+            (model ! [])
+                |> addToast (Toasty.Defaults.Warning Nothing "Please check this and that.")
+
+        BtnClicked "error-no-title" ->
+            (model ! [])
+                |> addToast (Toasty.Defaults.Error Nothing "Sorry, something went wrong...")
 
         BtnClicked _ ->
             model ! []
@@ -100,7 +116,8 @@ view model =
     Grid.containerFluid []
         [ h1 [] [ text "Toasty Bootstrap" ]
         , p []
-            [ text "Click for adding a "
+            [ h5 [] [ text "Toast with titles" ]
+            , text "Click for adding a "
             , Button.button [ Button.info, Button.onClick (BtnClicked "info") ] [ text "info" ]
             , text ", "
             , Button.button [ Button.success, Button.onClick (BtnClicked "success") ] [ text "success" ]
@@ -108,7 +125,7 @@ view model =
             , Button.button [ Button.warning, Button.onClick (BtnClicked "warning") ] [ text "warning" ]
             , text " or "
             , Button.button [ Button.danger, Button.onClick (BtnClicked "error") ] [ text "error" ]
-            , text " toast."
+            , text " toast with a title."
             ]
         , p []
             [ text "Also you can press in your keyboard "
@@ -119,7 +136,19 @@ view model =
             , kbd [] [ text "[w]" ]
             , text " for warning or "
             , kbd [] [ text "[e]" ]
-            , text " for error toasts."
+            , text " for error toasts with titles."
+            ]
+        , p []
+            [ h5 [] [ text "Toast WITHOUT titles" ]
+            , text "Click for adding a "
+            , Button.button [ Button.info, Button.onClick (BtnClicked "info-no-title") ] [ text "info" ]
+            , text ", "
+            , Button.button [ Button.success, Button.onClick (BtnClicked "success-no-title") ] [ text "success" ]
+            , text ", "
+            , Button.button [ Button.warning, Button.onClick (BtnClicked "warning-no-title") ] [ text "warning" ]
+            , text " or "
+            , Button.button [ Button.danger, Button.onClick (BtnClicked "error-no-title") ] [ text "error" ]
+            , text " toast WITHOUT a title."
             ]
         , p [ class "help small" ] [ text "Click on any toast to remove it." ]
         , p []

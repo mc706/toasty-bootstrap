@@ -24,17 +24,18 @@ See a [demo](http://toasty-bootstrap.surge.sh/).
 import Bootstrap.Alert as Alert
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Maybe exposing (..)
 import Toasty
 
 
 {-| This theme defines toasts of four variants: "Info", "Success", "Warning" and "Error".
-Each of them accepts a title and an optional secondary message.
+Each of them accepts an optional title and a message.
 -}
 type Toast
-    = Info String String
-    | Success String String
-    | Warning String String
-    | Error String String
+    = Info (Maybe String) String
+    | Success (Maybe String) String
+    | Warning (Maybe String) String
+    | Error (Maybe String) String
 
 
 {-| Default theme configuration.
@@ -109,13 +110,18 @@ view toast =
             simpleAlert Alert.simpleDanger title message
 
 
-simpleAlert : (List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg) -> String -> String -> Html msg
+simpleAlert : (List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg) -> Maybe String -> String -> Html msg
 simpleAlert config title message =
     div
         [ class "toasty-container" ]
         [ config
             []
-            [ Alert.h5 [] [ text title ]
+            [ case title of
+                Just aTitle ->
+                    Alert.h5 [] [ text aTitle ]
+
+                Nothing ->
+                    div [] []
             , text message
             ]
         ]

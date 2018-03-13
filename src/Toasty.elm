@@ -158,10 +158,10 @@ to be as complex or simple as you want.
 
     type MyToast
         =
-        | Info String String
-        | Success String String
-        | Warning String String
-        | Error String String
+        | Info (Maybe String) String
+        | Success (Maybe String) String
+        | Warning (Maybe String) String
+        | Error (Maybe String) String
 
 -}
 type Stack a

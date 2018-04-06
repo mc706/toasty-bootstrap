@@ -4,6 +4,7 @@ module Toasty
         , Msg
         , Stack
         , addToast
+        , addPersistentToast
         , config
         , containerAttrs
         , delay
@@ -168,6 +169,17 @@ type Stack a
     = Stack (List ( Id, Status, a )) Seed
 
 
+{-| How the toast will be removed.
+
+Temporary toasts are removed after a timeout or after a click,
+Persistent toasts must be clicked to be removed.
+
+-}
+type RemoveBehaviour
+    = Temporary
+    | Persistent
+
+
 {-| The internal message type used by the library. You need to tag and add it to your app messages.
 
     type Msg
@@ -330,7 +342,31 @@ update function branches.
 
 -}
 addToast : Config msg -> (Msg a -> msg) -> a -> ( { m | toasties : Stack a }, Cmd msg ) -> ( { m | toasties : Stack a }, Cmd msg )
-addToast config tagger toast ( model, cmd ) =
+addToast =
+    addToast_ Temporary
+
+
+{-| Adds a toast that won't be removed after a timeout to the stack. It receives and returns
+a tuple of type '(model, Cmd msg)' so that you can easily pipe it to your app
+update function branches.
+
+    update msg model =
+        case msg of
+            SomeAppMsg ->
+                ( newModel, Cmd.none )
+                    |> Toasty.addPersistentToast myConfig ToastyMsg (MyToast "Entity successfully created!")
+
+            ToastyMsg subMsg ->
+                Toasty.update myConfig ToastyMsg subMsg model
+
+-}
+addPersistentToast : Config msg -> (Msg a -> msg) -> a -> ( { m | toasties : Stack a }, Cmd msg ) -> ( { m | toasties : Stack a }, Cmd msg )
+addPersistentToast =
+    addToast_ Persistent
+
+
+addToast_ : RemoveBehaviour -> Config msg -> (Msg a -> msg) -> a -> ( { m | toasties : Stack a }, Cmd msg ) -> ( { m | toasties : Stack a }, Cmd msg )
+addToast_ removeBehaviour config tagger toast ( model, cmd ) =
     let
         (Config cfg) =
             config
@@ -340,9 +376,17 @@ addToast config tagger toast ( model, cmd ) =
 
         ( newId, newSeed ) =
             getNewId seed
+
+        task =
+            case removeBehaviour of
+                Temporary ->
+                    Task.perform (\() -> tagger (TransitionOut newId)) (Process.sleep <| cfg.delay * Time.millisecond)
+
+                Persistent ->
+                    Cmd.none
     in
     { model | toasties = Stack (toasts ++ [ ( newId, Entered, toast ) ]) newSeed }
-        ! [ cmd, Task.perform (\() -> tagger (TransitionOut newId)) (Process.sleep <| cfg.delay * Time.millisecond) ]
+        ! [ cmd, task ]
 
 
 {-| Renders the stack of toasts. You need to add it to your app view function and

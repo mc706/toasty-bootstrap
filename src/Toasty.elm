@@ -3,8 +3,8 @@ module Toasty
         ( Config
         , Msg
         , Stack
-        , addToast
         , addPersistentToast
+        , addToast
         , config
         , containerAttrs
         , delay

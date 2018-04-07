@@ -134,7 +134,7 @@ classes.
 
 # Other functions
 
-@docs view, update, addToast, initialState
+@docs view, update, addToast, addPersistentToast, initialState
 
 -}
 

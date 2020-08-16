@@ -1,0 +1,18 @@
+{
+    "version": "1.0.0",
+    "summary": "Examples for mc706/toasty-bootstrap",
+    "type": "application",
+    "repository": "https://github.com/user/project.git",
+    "license": "BSD3",
+    "source-directories": [
+        "../src",
+        "src"
+    ],
+    "exposed-modules": [],
+    "dependencies": {
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "rundis/elm-bootstrap": "5.2.0 <= v < 6.0.0"
+    },
+    "elm-version": "0.19.0 <= v < 0.20.0"
+}

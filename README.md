@@ -1,12 +1,13 @@
 # Toast notifications for Elm apps
 
-A fork of [Toasty](https://github.com/pablen/toasty) that uses elm-bootstrap to render toast messages using Bootstrap alerts.
+This is a fork of [toasty-bootstrap](https://github.com/andrewjackman/toasty-bootstrap) as an attempt to upgrade to the latest vesrion 
+of elm and elm-bootstrap.
 
-[![Build Status](https://travis-ci.org/andrewjackman/toasty-bootstrap.svg?branch=master)](https://travis-ci.org/andrewjackman/toasty-bootstrap)
+[![Build Status](https://travis-ci.org/mc706/toasty-bootstrap.svg?branch=master)](https://travis-ci.org/mc706/toasty-bootstrap)
 
 A configurable toast notification package for Elm apps following The Elm Architecture.
 
-See a [demo](http://toasty-bootstrap.surge.sh/) using `Toasty.Defaults` styling.
+See a [demo](http://mc706.github.io/toasty-bootstrap) using `Toasty.Defaults` styling.
 
 
 ## Installation
@@ -19,10 +20,8 @@ $ elm package install andrewjackman/toasty-bootstrap
 
 ## Documentation
 
-[See the Elm package for full usage docs](http://package.elm-lang.org/packages/andrewjackman/toasty-bootstrap/latest).
+[See the Elm package for full usage docs](http://package.elm-lang.org/packages/mc706/toasty-bootstrap/latest).
 
 ## License
-
-Copyright © 2018 Andrew Jackman
 
 Distributed under the BSD3 license.

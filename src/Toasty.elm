@@ -292,24 +292,24 @@ initialState =
 
 -}
 update : Config msg -> (Msg a -> msg) -> Msg a -> { m | toasties : Stack a } -> ( { m | toasties : Stack a }, Cmd msg )
-update config tagger msg model =
+update config_ tagger msg model =
     let
         (Config cfg) =
-            config
+            config_
 
         (Stack toasts seed) =
             model.toasties
     in
     case msg of
         Add toast ->
-            addToast config tagger toast ( model, Cmd.none )
+            addToast config_ tagger toast ( model, Cmd.none )
 
         Remove targetId ->
             let
                 newStack =
                     List.filter (\( id, toast, status ) -> id /= targetId) toasts
             in
-            { model | toasties = Stack newStack seed } ! []
+            ( {model | toasties = Stack newStack seed} , Cmd.none)
 
         TransitionOut targetId ->
             let
@@ -323,8 +323,8 @@ update config tagger msg model =
                         )
                         toasts
             in
-            { model | toasties = Stack newStack seed }
-                ! [ Task.perform (\_ -> tagger (Remove targetId)) (Process.sleep <| cfg.transitionOutDuration * Time.millisecond) ]
+            ({ model | toasties = Stack newStack seed }
+                ,  Cmd.batch [ Task.perform (\_ -> tagger (Remove targetId)) (Process.sleep <| cfg.transitionOutDuration * 1000) ])
 
 
 {-| Adds a toast to the stack and schedules its removal. It receives and returns
@@ -366,7 +366,7 @@ addPersistentToast =
 
 
 addToast_ : RemoveBehaviour -> Config msg -> (Msg a -> msg) -> a -> ( { m | toasties : Stack a }, Cmd msg ) -> ( { m | toasties : Stack a }, Cmd msg )
-addToast_ removeBehaviour config tagger toast ( model, cmd ) =
+addToast_ removeBehaviour config_ tagger toast ( model, cmd ) =
     let
         (Config cfg) =
             config
@@ -380,13 +380,13 @@ addToast_ removeBehaviour config tagger toast ( model, cmd ) =
         task =
             case removeBehaviour of
                 Temporary ->
-                    Task.perform (\() -> tagger (TransitionOut newId)) (Process.sleep <| cfg.delay * Time.millisecond)
+                    Task.perform (\() -> tagger (TransitionOut newId)) (Process.sleep <| cfg.delay * 1000)
 
                 Persistent ->
                     Cmd.none
     in
-    { model | toasties = Stack (toasts ++ [ ( newId, Entered, toast ) ]) newSeed }
-        ! [ cmd, task ]
+    ({ model | toasties = Stack (toasts ++ [ ( newId, Entered, toast ) ]) newSeed },
+        Cmd.batch [ cmd, task ])
 
 
 {-| Renders the stack of toasts. You need to add it to your app view function and
@@ -400,15 +400,15 @@ give it a function that knows how to render your toasts model.
 
 -}
 view : Config msg -> (a -> Html msg) -> (Msg a -> msg) -> Stack a -> Html msg
-view config toastView tagger (Stack toasts seed) =
+view config_ toastView tagger (Stack toasts seed) =
     let
         (Config cfg) =
-            config
+            config_
     in
     if List.isEmpty toasts then
         text ""
     else
-        Html.Keyed.ol cfg.containerAttrs <| List.map (\toast -> itemContainer config tagger toast toastView) toasts
+        Html.Keyed.ol cfg.containerAttrs <| List.map (\toast -> itemContainer config_ tagger toast toastView) toasts
 
 
 getNewId : Seed -> ( Id, Seed )
@@ -427,4 +427,4 @@ itemContainer (Config cfg) tagger ( id, status, toast ) toastView =
                 Leaving ->
                     cfg.transitionOutAttrs
     in
-    ( toString id, li (cfg.itemAttrs ++ attrs ++ [ onClick (tagger <| TransitionOut id) ]) [ toastView toast ] )
+    ( String.fromInt id, li (cfg.itemAttrs ++ attrs ++ [ onClick (tagger <| TransitionOut id) ]) [ toastView toast ] )

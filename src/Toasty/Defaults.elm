@@ -53,26 +53,22 @@ config =
 
 containerAttrs : List (Html.Attribute msg)
 containerAttrs =
-    [ style
-        [ ( "position", "fixed" )
-        , ( "top", "0" )
-        , ( "right", "0" )
-        , ( "width", "100%" )
-        , ( "max-width", "300px" )
-        , ( "list-style-type", "none" )
-        , ( "padding", "0" )
-        , ( "margin", "0" )
-        ]
+    [ style "position" "fixed"
+     , style "top" "0"
+     , style "right" "0"
+     , style "width" "100%"
+     , style "max-width" "300px"
+     , style "list-style-type" "none"
+     , style "padding" "0"
+     , style "margin" "0"
     ]
 
 
 itemAttrs : List (Html.Attribute msg)
 itemAttrs =
-    [ style
-        [ ( "margin", "1em 1em 0 1em" )
-        , ( "max-height", "100px" )
-        , ( "transition", "max-height 0.6s, margin-top 0.6s" )
-        ]
+    [ style "margin" "1em 1em 0 1em"
+    , style "max-height" "100px"
+    , style "transition" "max-height 0.6s, margin-top 0.6s"
     ]
 
 
@@ -85,10 +81,8 @@ transitionInAttrs =
 transitionOutAttrs : List (Html.Attribute msg)
 transitionOutAttrs =
     [ class "animated fadeOutRightBig"
-    , style
-        [ ( "max-height", "0" )
-        , ( "margin-top", "0" )
-        ]
+    , style "max-height" "0"
+    , style "margin-top" "0"
     ]
 
 
@@ -111,10 +105,10 @@ view toast =
 
 
 simpleAlert : (List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg) -> Maybe String -> String -> Html msg
-simpleAlert config title message =
+simpleAlert config_ title message =
     div
         [ class "toasty-container" ]
-        [ config
+        [ config_
             []
             [ case title of
                 Just aTitle ->

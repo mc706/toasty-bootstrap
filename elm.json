@@ -3,7 +3,7 @@
     "name": "mc706/toasty-bootstrap",
     "summary": "A configurable toast notification package for Elm, using elm-bootstrap alerts.",
     "license": "BSD-3-Clause",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "exposed-modules": [
         "Toasty",
         "Toasty.Defaults"

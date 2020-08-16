@@ -324,7 +324,7 @@ update config_ tagger msg model =
                         toasts
             in
             ({ model | toasties = Stack newStack seed }
-                ,  Cmd.batch [ Task.perform (\_ -> tagger (Remove targetId)) (Process.sleep <| cfg.transitionOutDuration * 1000) ])
+                ,  Cmd.batch [ Task.perform (\_ -> tagger (Remove targetId)) (Process.sleep <| cfg.transitionOutDuration) ])
 
 
 {-| Adds a toast to the stack and schedules its removal. It receives and returns
@@ -380,7 +380,7 @@ addToast_ removeBehaviour config_ tagger toast ( model, cmd ) =
         task =
             case removeBehaviour of
                 Temporary ->
-                    Task.perform (\() -> tagger (TransitionOut newId)) (Process.sleep <| cfg.delay * 1000)
+                    Task.perform (\() -> tagger (TransitionOut newId)) (Process.sleep <| cfg.delay)
 
                 Persistent ->
                     Cmd.none

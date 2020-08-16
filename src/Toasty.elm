@@ -369,7 +369,7 @@ addToast_ : RemoveBehaviour -> Config msg -> (Msg a -> msg) -> a -> ( { m | toas
 addToast_ removeBehaviour config_ tagger toast ( model, cmd ) =
     let
         (Config cfg) =
-            config
+            config_
 
         (Stack toasts seed) =
             model.toasties
